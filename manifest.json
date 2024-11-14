@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "EyeRest",
-  "description": "Przypomina o przerwie, umożliwia ustawienie czasu i dodawanie drzemek",
+  "description": "It reminds you about taking breaks",
   "version": "1.0",
   "permissions": ["alarms", "notifications", "storage"],
   "background": {
