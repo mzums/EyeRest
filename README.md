@@ -1,5 +1,5 @@
 # EyeRest
-![alt text](image.png)
+<img src="image.png" width="350">
   
 **EyeRest** is a Chrome extension that reminds you to take a break.
 
