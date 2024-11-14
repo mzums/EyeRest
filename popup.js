@@ -1,34 +1,22 @@
-const tabs = await chrome.tabs.query({});
-
-const collator = new Intl.Collator();
-tabs.sort((a, b) => collator.compare(a.title, b.title));
-
-const template = document.getElementById("li_template");
-const elements = new Set();
-
-for (const tab of tabs) {
-    const element = template.content.firstElementChild.cloneNode(true);
-    const title = (tab.title || "Bez tytułu").split("-")[0].trim();
-    const pathname = tab.url ? new URL(tab.url).pathname : "Nieznana ścieżka";
-
-
-    element.querySelector(".title").textContent = title;
-    element.querySelector(".pathname").textContent = pathname;
-    element.querySelector("a").addEventListener("click", async () => {
-        await chrome.tabs.update(tab.id, { active: true });
-        await chrome.windows.update(tab.windowId, { focused: true });
+// Po załadowaniu popupu wczytujemy zapisany czas przypomnienia
+document.addEventListener('DOMContentLoaded', () => {
+    chrome.storage.local.get('reminderTime', (data) => {
+        if (data.reminderTime) {
+            document.getElementById("reminderTime").value = data.reminderTime;
+        }
     });
+});
 
-    elements.add(element);
-}
-
-document.querySelector("ul").append(...elements);
-
-const button = document.querySelector("button");
-button.addEventListener("click", async () => {
-    const tabIds = tabs.map(({ id }) => id);
-    if (tabIds.length) {
-        const group = await chrome.tabs.group({ tabIds });
-        await chrome.tabGroups.update(group, { title: "All Tabs" });
+// Ustawienie czasu przypomnienia
+document.getElementById("setReminder").addEventListener("click", () => {
+    const time = parseInt(document.getElementById("reminderTime").value, 10);
+    if (time > 0) {
+        chrome.storage.local.set({ reminderTime: time });
+        chrome.runtime.sendMessage({ action: "setReminder", time: time });
     }
+});
+
+// Drzemka na 5 minut
+document.getElementById("snoozeButton").addEventListener("click", () => {
+    chrome.runtime.sendMessage({ action: "snooze" });
 });
