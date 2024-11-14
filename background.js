@@ -7,7 +7,7 @@ chrome.runtime.onMessage.addListener((message) => {
     }
 
     if (message.action === "snooze") {
-        chrome.alarms.create("breakReminder", { when: Date.now() + 0.5 * 60 * 1000 });
+        chrome.alarms.create("breakReminder", { when: Date.now() + 5 * 60 * 1000 });
     }
 });
 
@@ -16,7 +16,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
         console.log("Break reminder triggered!");
         chrome.notifications.create({
             type: "basic",
-            iconUrl: "images/icon128.png",
+            iconUrl: "logo.png",
             title: "Time for a break!",
             message: "Reminder to take a break.",
             priority: 2,
